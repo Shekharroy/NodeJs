@@ -9,8 +9,7 @@ http.createServer(function (req, res) {
   res.end('Hi Pooja!');
 }).listen(8080);
 console.log('This example is different!');
-console.log('The result is displayed in the Command Line Interface');
+console.log('The result is displayed in the Command Line Interface'); // const os = require('os');
+// console.log(os.platform());
 
-var os = require('os');
-
-console.log(os.platform());
+console.log("V8 Version ".concat(process.version.v24));

@@ -9,5 +9,7 @@ http.createServer(function(req, res){
 console.log('This example is different!');
 console.log('The result is displayed in the Command Line Interface');
 
-const os = require('os');
-console.log(os.platform());
+// const os = require('os');
+// console.log(os.platform());
+
+console.log(`V8 Version ${process.version.v24}`);

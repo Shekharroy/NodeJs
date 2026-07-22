@@ -1,0 +1,6 @@
+let http = require('http');
+
+http.createServer(function(req, res){
+    res.writeHead(200, {'Content-Type':'text/python'});
+    res.end('Hello World! python');
+}).listen(8080);
