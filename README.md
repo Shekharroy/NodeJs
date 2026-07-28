@@ -515,3 +515,126 @@ myPromise.then(result => console.log('Success: ', result)).catch(error => consol
 # Ans:- Promises can be chained to execute asynchronous operations in sequence, with each .then() receiving the result of the previous operation.
 
 # एसिंक्रोनस ऑपरेशन्स को क्रम में चलाने के लिए प्रॉमिसेज़ को एक-दूसरे से जोड़ा जा सकता है, जहाँ हर .then() को पिछले ऑपरेशन का रिज़ल्ट मिलता है।
+
+# Async/Await:-
+ # Async/await makes asynchronous code look and more feel like synchronous code. It does not block the main thread, but is easy to follow and understand.
+
+ # Why Handle Errors?
+ # Ans- Errors are inevitable in any program, but how you handle them makes all the difference. In Node.js, proper error handling is crucial because: (किसी भी प्रोग्राम में गलतियाँ होना तय है, लेकिन आप उन्हें कैसे संभालते हैं, इससे बहुत फ़र्क पड़ता है। Node.js में, सही तरीके से एरर हैंडलिंग बहुत ज़रूरी है क्योंकि:): -
+ # 1. It prevents applications from crashing unexpectedly. (1. यह एप्लीकेशन को अचानक क्रैश होने से बचाता है)
+
+ # 2. It provides meaningful feedback to users. (2. यह यूज़र्स को काम की जानकारी (फ़ीडबैक) देता है)
+
+ # 3. It makes debugging easier with proper error context. (3. यह एरर के सही संदर्भ (context) के साथ डीबगिंग को आसान बनाता है)
+
+ # 4. It helps maintain application stability in production. (4. यह प्रोडक्शन में एप्लीकेशन की स्टेबिलिटी बनाए रखने में मदद करता है)
+
+ # 5. It ensures resources are properly cleaned up. (5. यह पक्का करता है कि रिसोर्स ठीक से साफ़ (clean up) किए जाएं)
+
+ # Common Error Types in Node.js
+ # Understanding different error types helps in handling them appropriately:
+
+ # 1. Standard JavaScript Errors
+
+ # // SyntaxError
+ ****************
+JSON.parse('{invalid json}');
+
+# // TypeError
+**************
+null.someProperty;
+
+# // ReferenceError
+*******************
+unknownVariable;
+
+# 2. System Errors
+# // ENOENT: No such file or directory
+************
+const fs = require('fs');
+fs.readFile('nonexistent.txt', (err) => {
+  console.error(err.code); // 'ENOENT'
+});
+
+# // ECONNREFUSED: Connection refused
+******************
+const http = require('http');
+const req = http.get('http://nonexistent-site.com', (res) => {});
+req.on('error', (err) => {
+  console.error(err.code); // 'ECONNREFUSED' or 'ENOTFOUND'
+                              *****************************
+})
+
+# Basic Error Handling
+
+# Node.js follows several patterns for error handling:
+# Error-First Callbacks: ->> The most common pattern in Node.js core modules where the first argument to a callback is an error object (if any occurred). (Node.js कोर मॉड्यूल्स में सबसे आम पैटर्न यह है कि कॉलबैक का पहला आर्गुमेंट एक एरर ऑब्जेक्ट होता है (अगर कोई एरर हुआ हो)।)
+
+# Modern Error Handling: Using try...catch with Async/Await -->>  With async/await, you can use try/catch blocks for both synchronous and asynchronous code:
+
+# Global Error Handling: Uncaught Exceptions: For unexpected errors, you can listen for uncaughtException to perform cleanup before exiting:
+ 
+ # Error Handling Best Practices
+ # Dos and Don'ts
+
+  # Do:
+  *****
+
+  # 1. Handle errors at the appropriate level ()
+
+  # 2. Log errors with sufficient context
+
+  # 3. Use custom error types for different scenarios
+
+  # 4. Clean up resources in finally blocks
+
+  # 5. Validate input to catch errors early
+
+# क्या करें:
+  *******
+
+  # 1. सही लेवल पर एरर को हैंडल करें ()
+
+  # 2. ज़रूरी जानकारी (context) के साथ एरर को लॉग करें
+
+  # 3. अलग-अलग स्थितियों के लिए कस्टम एरर टाइप का इस्तेमाल करें
+
+  # 4. finally ब्लॉक में रिसोर्स को साफ़ (clean up) करें
+
+  # 5. एरर का जल्दी पता लगाने के लिए इनपुट को वैलिडेट करें
+
+ # Don't: 
+ *********
+
+  # 1. Ignore errors (empty catch blocks)
+
+  # 2. Expose sensitive error details to clients
+
+  # 3. Use try/catch for flow control
+
+  # 4. Swallow errors without logging them
+
+  # 5. Continue execution after unrecoverable errors
+
+  # क्या न करें:
+  ************
+
+# 1. एरर को नज़रअंदाज़ न करें (खाली कैच ब्लॉक न रखें)
+
+# 2. क्लाइंट्स को सेंसिटिव एरर की जानकारी न दें
+
+# 3. फ्लो कंट्रोल के लिए try/catch का इस्तेमाल न करें
+
+# 4. एरर को बिना लॉग किए न छोड़ें
+
+# 5. ठीक न हो सकने वाले एरर के बाद भी काम जारी न रखें
+
+
+# Node.js Modules
+*****************
+
+# What is a Module in Node.js? :->> Modules are the building blocks of Node.js applications, allowing you to organize code into logical, reusable components. They help in: 1. Organizing code into manageable files, 2. Encapsulating functionality, 3. Preventing global namespace pollution, 4. Improving code maintainability and reusability. { मॉड्यूल Node.js एप्लिकेशन के बिल्डिंग ब्लॉक होते हैं, जो आपको कोड को लॉजिकल और दोबारा इस्तेमाल होने वाले कंपोनेंट्स में व्यवस्थित करने की सुविधा देते हैं। ये इन कामों में मदद करते हैं: 1. कोड को आसानी से मैनेज की जा सकने वाली फाइलों में व्यवस्थित करना, 2. फंक्शनैलिटी को एनकैप्सुलेट करना (एक साथ समेटना), 3. ग्लोबल नेमस्पेस पॉल्यूशन को रोकना, 4. कोड को मेंटेन करने और दोबारा इस्तेमाल करने की क्षमता को बेहतर बनाना. }
+
+# Node.js supports two module systems: CommonJS (traditional) and ES Modules (ECMAScript modules).
+
+# This page covers CommonJS, while ES Modules are covered separately.

@@ -1,7 +1,7 @@
 
 function getUser(userId){
     return new Promise((resolve, reject)=>{
-        // Simulating database csll
+        // Simulating database call
         setTimeout(() => {
             resolve({id:userId, name: 'John'});
         }, 1000);

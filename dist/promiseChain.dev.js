@@ -2,7 +2,7 @@
 
 function getUser(userId) {
   return new Promise(function (resolve, reject) {
-    // Simulating database csll
+    // Simulating database call
     setTimeout(function () {
       resolve({
         id: userId,
