@@ -638,3 +638,311 @@ req.on('error', (err) => {
 # Node.js supports two module systems: CommonJS (traditional) and ES Modules (ECMAScript modules).
 
 # This page covers CommonJS, while ES Modules are covered separately.
+
+# Core Built-in Modules
+
+`````` javaScript 
+Node.js provides several built-in modules that are compiled into the binary.
+
+Here are some of the most commonly used ones:
+
+{Node.js कई इन-बिल्ट मॉड्यूल देता है जो बाइनरी में कंपाइल किए जाते हैं।
+
+यहाँ कुछ सबसे ज़्यादा इस्तेमाल होने वाले मॉड्यूल दिए गए हैं:}
+`
+  1. fs - File system operations
+  2. http - HTTP server and client
+  3. path - File path utilities
+  4. os - Operating system utilities
+  5. events - Event handling
+  6. util - Utility functions
+  7. stream - Stream handling
+  8. crypto - Cryptographic functions
+  9. url - URL parsing
+  10. querystring - URL query string handling
+
+`
+
+To use any built-in module, use the require() function:
+
+Example: Using Multiple Built-in Modules
+const http = require('http');
+
+
+Example: Simple HTTP Server
+
+const http = require('http');
+http.createServer((req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World!');
+}).listen(8080);
+
+Explanation of above code:-->>
+
+This is a minimal Node.js HTTP server that responds with "Hello World!" when accessed. Here's what each part does:
+
+const http = require('http') — Imports Node.js's built-in http module, which provides the tools to create a web server.
+
+http.createServer((req, res) => { ... }) — Creates a new server. The arrow function runs every time a request comes in:
+
+req — the incoming request object (contains URL, method, headers, etc.)
+res — the response object used to send data back to the client
+res.writeHead(200, {'Content-Type': 'text/plain'}) — Sets the HTTP response status code to 200 (OK) and tells the client the response is plain text.
+
+res.end('Hello World!') — Sends the string 'Hello World!' as the response body and signals that the response is complete.
+
+.listen(8080) — Binds the server to port 8080 on your machine, making it accessible at http://localhost:8080.
+
+How to use it: Save the code in a file (e.g., server.js), run node server.js in the terminal, then open your browser to http://localhost:8080 — you'll see "Hello World!" displayed.
+
+
+Example: utils.js
+// Exporting multiple functions
+const getCurrentDate = () => new Date().toISOString();
+
+const formatCurrency = (amount, currency = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency
+  }).format(amount);
+};
+
+// Method 1: Exporting multiple items
+exports.getCurrentDate = getCurrentDate;
+exports.formatCurrency = formatCurrency;
+
+// Method 2: Exporting an object with multiple properties
+// module.exports = { getCurrentDate, formatCurrency };
+
+# Explanation of util.js code:
+******************************
+
+This code is a standard CommonJS module (used primarily in Node.js) that defines and exports two utility functions so other files in your project can reuse them.
+
+1. The Functions
+getCurrentDate
+
+const getCurrentDate = () => new Date().toISOString();
+What it does: Returns the current date and time as a standardized UTC string in ISO format (e.g., "2026-07-28T13:09:13.000Z").
+
+Syntax: Uses an ES6 arrow function with an implicit return.
+
+formatCurrency
+
+const formatCurrency = (amount, currency = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency
+  }).format(amount);
+};
+What it does: Formats a raw number into a localized currency string. For example:
+
+formatCurrency(100) → "$100.00"
+
+formatCurrency(100, 'EUR') → "€100.00"
+
+Key Features:
+
+Uses default parameters (currency = 'USD'), defaulting to US Dollars if no currency code is provided.
+
+Uses JavaScript’s built-in Intl.NumberFormat API for localization.
+
+2. The Export Strategies
+In Node.js CommonJS environments, module.exports is the actual object that gets returned when another file uses require('./utils.js'). The variable exports is simply a shorthand reference pointing to module.exports.
+
+Method 1 (Active in your code)
+
+exports.getCurrentDate = getCurrentDate;
+exports.formatCurrency = formatCurrency;
+How it works: Attaches each function individually as a property to the existing exports object.
+
+Importing it elsewhere:
+
+
+const utils = require('./utils');
+console.log(utils.formatCurrency(50)); // "$50.00"
+
+// Or using destructuring:
+const { formatCurrency } = require('./utils');
+
+Method 2 (Commented out)
+
+// module.exports = { getCurrentDate, formatCurrency };
+How it works: Overwrites module.exports entirely with a new object containing both functions. It uses ES6 object property shorthand ({ getCurrentDate } is equivalent to { getCurrentDate: getCurrentDate }).
+
+Why choose Method 2? It is usually preferred in larger files because it keeps all exports in one clean, explicit object at the bottom of the file.
+
+Caution: If you ever reassign exports directly (e.g., exports = { ... }), it breaks the reference to module.exports and nothing will be exported. Always assign a full object to module.exports instead.
+
+
+2. Exporting a Single Item
+**************************
+To export a single item (function, object, etc.), assign it to module.exports:
+
+Example: logger.js
+class Logger {
+  constructor(name) {
+    this.name = name;
+  }
+
+  log(message) {
+    console.log(`[${this.name}] ${message}`);
+  }
+
+  error(error) {
+    console.error(`[${this.name}] ERROR:`, error.message);
+  }
+}
+
+// Exporting a single class
+module.exports = Logger;
+
+
+3. Using Your Modules
+**********************
+Import and use your custom modules using require() with a relative or absolute path:
+
+Example: app.js
+
+const http = require('http');
+const path = require('path');
+
+// Importing custom modules
+const { getCurrentDate, formatCurrency } = require('./utils');
+const Logger = require('./logger');
+
+// Create a logger instance
+const logger = new Logger('App');
+
+// Create server
+const server = http.createServer((req, res) => {
+  try {
+    logger.log(`Request received for ${req.url}`);
+
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.write(`<h1>Welcome to our app!</h1>`);
+    res.write(`<p>Current date: ${getCurrentDate()}</p>`);
+    res.write(`<p>Formatted amount: ${formatCurrency(99.99)}</p>`);
+    res.end();
+  } catch (error) {
+    logger.error(error);
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end('Internal Server Error');
+  }
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  logger.log(`Server running at http://localhost:${PORT}`);
+});
+``````
+
+# Module Loading and Caching
+
+`````` JavaScript
+Node.js caches modules after the first time they are loaded. This means that subsequent require() calls return the cached version.
+
+Module Resolution
+
+When you require a module, Node.js looks for it in this order:
+
+1. Core Node.js modules (like fs, http)
+
+2. Node modules in node_modules folders
+
+3. Local files (using ./ or ../ prefix)
+
+{
+  मॉड्यूल लोडिंग और कैशिंग
+
+Node.js मॉड्यूल को पहली बार लोड होने के बाद कैश कर लेता है। इसका मतलब है कि बाद में किए गए require() कॉल्स कैश किए गए वर्शन को ही लौटाते हैं।
+
+मॉड्यूल रिज़ॉल्यूशन
+
+जब आप किसी मॉड्यूल को require करते हैं, तो Node.js उसे इस क्रम में ढूँढता है:
+
+1. कोर Node.js मॉड्यूल (जैसे fs, http)
+
+2. node_modules फ़ोल्डर में मौजूद Node मॉड्यूल
+
+3. लोकल फ़ाइलें (./ या ../ प्रीफ़िक्स का इस्तेमाल करके)
+}
+
+``````
+# Module Organization
+``` JavaScript
+1. Keep modules focused on a single responsibility
+
+2. Use meaningful file and directory names
+
+3. Group related functionality together
+
+4. Use index.js for module entry points
+{
+  मॉड्यूल ऑर्गनाइज़ेशन
+
+1. मॉड्यूल को एक ही ज़िम्मेदारी पर केंद्रित रखें
+
+2. फ़ाइल और डायरेक्टरी के सार्थक नाम इस्तेमाल करें
+
+3. संबंधित फ़ंक्शनैलिटी को एक साथ रखें
+
+4. मॉड्यूल एंट्री पॉइंट्स के लिए index.js का इस्तेमाल करें
+}
+
+`# Export Patterns`
+
+1. Prefer named exports for utilities
+
+2.Use default exports for single-class modules
+
+3. Document your module's API
+
+4.Handle module initialization if needed
+
+{
+  `# निर्यात पैटर्न`
+
+1. यूटिलिटीज़ के लिए नाम वाले निर्यात को प्राथमिकता दें
+
+2. सिंगल-क्लास मॉड्यूल के लिए डिफ़ॉल्ट निर्यात का उपयोग करें
+
+3. अपने मॉड्यूल के API का दस्तावेज़ीकरण करें
+
+4. आवश्यकता पड़ने पर मॉड्यूल आरंभीकरण को संभालें
+}
+
+`# Summary`
+
+Modules are a key concept in Node.js. They enable you to organize code into reusable, maintainable units.
+
+By understanding how to create, export, and use modules effectively, you can build scalable and well-structured applications.
+
+Key takeaways:
+
+1. Node.js uses CommonJS modules by default
+
+2.Use require() to import and module.exports to export
+
+3. Modules are cached after first load
+
+4. Follow best practices for module organization and structure
+
+{
+  `#सारांश`
+
+Node.js में मॉड्यूल्स एक अहम कॉन्सेप्ट हैं। ये आपको कोड को दोबारा इस्तेमाल करने लायक और आसानी से मेंटेन किए जा सकने वाले हिस्सों में व्यवस्थित करने की सुविधा देते हैं।
+
+मॉड्यूल्स को सही तरीके से बनाने, एक्सपोर्ट करने और इस्तेमाल करने का तरीका समझकर, आप स्केलेबल और अच्छी तरह से व्यवस्थित एप्लिकेशन बना सकते हैं।
+
+मुख्य बातें:
+
+1. Node.js डिफ़ॉल्ट रूप से CommonJS मॉड्यूल्स का इस्तेमाल करता है
+
+2. इम्पोर्ट करने के लिए require() और एक्सपोर्ट करने के लिए module.exports का इस्तेमाल करें
+
+3. पहली बार लोड होने के बाद मॉड्यूल्स कैश हो जाते हैं
+
+4. मॉड्यूल ऑर्गनाइज़ेशन और स्ट्रक्चर के लिए बेस्ट प्रैक्टिसेज़ का पालन करें
+}
