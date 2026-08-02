@@ -946,3 +946,32 @@ Node.js में मॉड्यूल्स एक अहम कॉन्स�
 
 4. मॉड्यूल ऑर्गनाइज़ेशन और स्ट्रक्चर के लिए बेस्ट प्रैक्टिसेज़ का पालन करें
 }
+
+```
+# What is a Package?
+```JavaScript
+1. A package in Node.js contains all the files you need for a module.
+2. Modules are JavaScript Libraries you can include in your project.
+```
+
+# NodeJS package.json
+*******************
+# Question: - What is package.json ?
+***********************************
+```javaScript
+    package.json is a special file that describe your Node.js project.
+    It contain information about your app, such as name, version, dependencies, scripts and more.
+    This file is essesntial for managing and sharing Node.js project, especially when using npm(Node Package Manager)
+```
+# Creating package.json
+
+you can create package.json file by running the following command in your project folder:
+
+```javaScript
+    npm init
+
+    This above command will ask you a series of questions about your project and generate a package.json file.
+    For a quick setup with default value, use:
+    
+    npm init -y
+
